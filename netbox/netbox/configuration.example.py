@@ -105,6 +105,14 @@ EXEMPT_VIEW_PERMISSIONS = [
     # 'ipam.prefix',
 ]
 
+# Setting this to True will change the database, that cable labels will become unique.
+LABEL_UNIQUE = False
+
+# Cable labels can be validated against a given Regular Expression. This example in Python's re-style is the default,
+# when enabled.
+LABEL_VALIDATION = False
+LABEL_VALIDATION_REGEX = '^[ 0-9a-zA-Z#-.]*$'
+
 # Enable custom logging. Please see the Django documentation for detailed guidance on configuring custom logs:
 #   https://docs.djangoproject.com/en/1.11/topics/logging/
 LOGGING = {}

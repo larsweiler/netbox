@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from itertools import count, groupby
+from re import match
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -2775,6 +2776,19 @@ class Cable(ChangeLoggedModel):
             raise ValidationError("Must specify a unit when setting a cable length")
         elif self.length is None:
             self.length_unit = None
+
+        # Validate if the label is unique
+        # This can't be done in the database model with "unique=True", as this will
+        # change the model
+        if settings.LABEL_UNIQUE:
+            if Cable.objects.filter(label=self.label).count() > 0:
+                raise ValidationError("This label is already in use")
+
+        # Validate if the label matches a regular expression
+        # A Django core validator can't be used here, as this will change the model
+        if settings.LABEL_VALIDATION:
+            if not match(settings.LABEL_VALIDATION_REGEX, self.label):
+                raise ValidationError("Label contains disallowed characters")
 
     def save(self, *args, **kwargs):
 
